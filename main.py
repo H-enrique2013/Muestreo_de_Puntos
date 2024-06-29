@@ -18,7 +18,9 @@ def generate_map():
         script_mapa.GeneradorHmtl_mapa(dep, prov, distr, dicPuntos)
         return jsonify({"status": "success", "message": "Mapa generado exitosamente"}),200
     else:
-        return jsonify({"error":"Método no permitido"}),405
+        metodo=request.method
+        #return jsonify({"error":"Método no permitido"}),405
+        return jsonify({"error":metodo}),405
 
 @app.route('/favicon.ico')
 def favicon():
