@@ -13,7 +13,7 @@ def index():
 
 @app.route('/generate-map', methods=['POST'])
 def generate_map():
-    if request.method=='POST':
+    if request.method=='GET':
         data = request.get_json()
         dep = data.get('Departamento')
         prov = data.get('Provincia')
