@@ -16,7 +16,14 @@ def generate_map():
         distr = data.get('distr')
         dicPuntos = script_mapa.generar_puntos()
         script_mapa.GeneradorHmtl_mapa(dep, prov, distr, dicPuntos)
-        return jsonify({"status": "success", "message": "Mapa generado exitosamente"}),200
+        # Verificar si el resultado es un JSON válido
+        try:
+            response_data = jsonify({"status": "success", "message": "Mapa generado exitosamente"})
+            return response_data, 200
+        except Exception as e:
+            return jsonify({"error": f"Error al generar JSON: {str(e)}"}), 500
+        
+        
     else:
         metodo=request.method
         #return jsonify({"error":"Método no permitido"}),405
