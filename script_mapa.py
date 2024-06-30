@@ -21,7 +21,7 @@ dir_shape={"AYACUCHO":os.path.join('Shape','Ayacucho','05_AYACUCHO_SectoresEstad
 
 
 def GeneradorHmtl_mapa(dep,prov,distr,dicPuntos):
-    shapefile_dir=f'Shape/{dep}'
+    shapefile_dir=f'Shape/{dep.capitalize()}'
     shapefile_path = glob.glob(os.path.join(shapefile_dir, '*.shp'))[0]
 
     if not shapefile_path:
