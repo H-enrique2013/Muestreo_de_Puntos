@@ -39,7 +39,7 @@ def GeneradorHmtl_mapa(dep,prov,distr,dicPuntos):
 
     # Agregar los puntos al mapa
     for punto, coord in dicPuntos.items():
-        folium.Marker(location=[coord[1], coord[0]], popup=punto, icon=folium.Icon(color='yellow')).add_to(m)
+        folium.Marker(location=[coord[1], coord[0]], popup=punto, icon=folium.Icon(color='orange')).add_to(m)
 
     # Generar el nombre del archivo con la combinación de departamento, provincia, distrito y hora actual
     now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
