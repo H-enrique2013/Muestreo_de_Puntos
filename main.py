@@ -18,7 +18,6 @@ def generate_map():
         dep = data.get('Departamento')
         prov = data.get('Provincia')
         distr = data.get('Distrito')
-        #dicPuntos = script_mapa.generar_puntos()
         dicPuntos=data.get('DiccionarioPuntos')
 
         try:
