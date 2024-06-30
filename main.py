@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_from_directory,render_template
 import script_mapa
-
+import os
 
 app = Flask(__name__, template_folder='templates')
 
@@ -20,15 +20,18 @@ def generate_map():
         distr = data.get('Distrito')
         #dicPuntos = script_mapa.generar_puntos()
         dicPuntos=data.get('DiccionarioPuntos')
-        script_mapa.GeneradorHmtl_mapa(dep, prov, distr, dicPuntos)
-        # Verificar si el resultado es un JSON válido
+
         try:
-            response_data = jsonify({"status": "success", "message": "Mapa generado exitosamente"})
-            return response_data, 200
+            filepath = script_mapa.GeneradorHmtl_mapa(dep, prov, distr, dicPuntos)
+            # Devolver el archivo como respuesta
+            return send_from_directory(directory='static', filename=filepath.split('/')[-1]), 200
         except Exception as e:
-            return jsonify({"error": f"Error al generar JSON: {str(e)}"}), 500
-        
-        
+            return jsonify({"error": f"Error al generar el mapa: {str(e)}"}), 500
+        finally:
+            # Eliminar el archivo después de enviar la respuesta
+            if os.path.exists(filepath):
+                os.remove(filepath)
+ 
     else:
         #metodo=request.method
         return jsonify({"error":"Método no permitido"}),405

@@ -3,6 +3,7 @@ import folium
 from shapely.geometry import Point
 import random
 import os
+import datetime
 
 dir_shape={"AYACUCHO":os.path.join('Shape','Ayacucho','05_AYACUCHO_SectoresEstadisticos.shp'),
            "APURIMAC":os.path.join('Shape','Apurimac','03_APURIMAC_SectoresEstadisticos.shp'),
@@ -16,6 +17,8 @@ dir_shape={"AYACUCHO":os.path.join('Shape','Ayacucho','05_AYACUCHO_SectoresEstad
 
 def GeneradorHmtl_mapa(dep,prov,distr,dicPuntos):
     file_shape=dir_shape[dep]
+    if not file_shape:
+        raise ValueError(f"No se encontró el archivo de shapefile para '{dep}'")
     shape_sector = gpd.read_file(file_shape)
     mapa = shape_sector[
         (shape_sector['NOMBDEP'] == dep) &
@@ -38,8 +41,13 @@ def GeneradorHmtl_mapa(dep,prov,distr,dicPuntos):
     for punto, coord in dicPuntos.items():
         folium.Marker(location=[coord[1], coord[0]], popup=punto, icon=folium.Icon(color='yellow')).add_to(m)
 
-    # Mostrar el mapa
-    m.save("mapa.html")
+    # Generar el nombre del archivo con la combinación de departamento, provincia, distrito y hora actual
+    now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = f"{dep}_{prov}_{distr}_{now}.html"
+    filepath = os.path.join("static", filename)  # Guardar en la carpeta 'static' de Flask
+    m.save(filepath)
+
+    return filepath  # Devolver la ruta al archivo generado
 
 
 #GeneradorHmtl_mapa('AYACUCHO','HUANTA','IGUAIN',generar_puntos())
