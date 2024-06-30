@@ -11,7 +11,7 @@ def index():
     
     return render_template('index.html')
 
-@app.route('/generate-map', methods=['GET', 'POST'])
+@app.route('/generate-map', methods=['POST'])
 def generate_map():
     if request.method=='POST':
         data = request.get_json()
