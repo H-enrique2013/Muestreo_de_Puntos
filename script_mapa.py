@@ -4,7 +4,9 @@ from shapely.geometry import Point
 import random
 import os
 import datetime
+import glob
 
+'''
 dir_shape={"AYACUCHO":os.path.join('Shape','Ayacucho','05_AYACUCHO_SectoresEstadisticos.shp'),
            "APURIMAC":os.path.join('Shape','Apurimac','03_APURIMAC_SectoresEstadisticos.shp'),
            "HUANCAVELICA":os.path.join('Shape','Huancavelica','09_HUANCAVELICA_SectoresEstadisticos.shp'),
@@ -14,12 +16,17 @@ dir_shape={"AYACUCHO":os.path.join('Shape','Ayacucho','05_AYACUCHO_SectoresEstad
            "TACNA":os.path.join('Shape','Tacna','23_TACNA_SectoresEstadisticos.shp'),
            "TUMBES":os.path.join('Shape','Tumbes','24_TUMBES_SectoresEstadisticos.shp')
            }
+'''
+
+
 
 def GeneradorHmtl_mapa(dep,prov,distr,dicPuntos):
-    file_shape=dir_shape[dep]
-    if not file_shape:
+    shapefile_dir=f'Shape/{dep}'
+    shapefile_path = glob.glob(os.path.join(shapefile_dir, '*.shp'))[0]
+
+    if not shapefile_path:
         raise ValueError(f"No se encontró el archivo de shapefile para '{dep}'")
-    shape_sector = gpd.read_file(file_shape)
+    shape_sector = gpd.read_file(shapefile_path)
     mapa = shape_sector[
         (shape_sector['NOMBDEP'] == dep) &
         (shape_sector['NOMBPROV'] == prov) &
