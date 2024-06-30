@@ -1,5 +1,7 @@
 uvicorn
 geopandas
 folium
+fiona
+shapely
 Flask==3.0.3
 gunicorn==20.1.0
