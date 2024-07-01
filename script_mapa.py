@@ -15,7 +15,7 @@ def GeneradorHmtl_mapa(dep, prov, distr, dicPuntos):
     # Seleccionar el primer archivo .shp encontrado
     shapefile_path = shapefile_paths[0]
     
-    shape_sector = gpd.read_file(shapefile_path)
+    shape_sector = gpd.read_file(shapefile_path,driver='ESRI Shapefile')
     
     mapa = shape_sector[
         (shape_sector['NOMBDEP'] == dep) &
