@@ -3,17 +3,15 @@ import folium
 from shapely.geometry import Point
 import os
 import datetime
-import glob
+
 
 def GeneradorHmtl_mapa(dep, prov, distr, dicPuntos):
-    shapefile_dir = f'Shape/{dep.capitalize()}'
-    shapefile_paths = glob.glob(os.path.join(shapefile_dir, '*.shp'))
+    nom_dep = dep.replace(" ", "_")
+    shapefile_dir = f'shapefiles/{nom_dep}.shp'
+    shapefile_path = os.path.join(shapefile_dir)
     
-    if not shapefile_paths:
+    if not shapefile_path:
         raise ValueError(f"No se encontraron archivos de shapefile para '{dep}' en '{shapefile_dir}'")
-    
-    # Seleccionar el primer archivo .shp encontrado
-    shapefile_path = shapefile_paths[0]
     
     shape_sector = gpd.read_file(shapefile_path,driver='ESRI Shapefile')
     
