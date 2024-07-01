@@ -26,6 +26,7 @@ def GeneradorHmtl_mapa(dep,prov,distr,dicPuntos):
         raise ValueError(f"No se encontró el archivo de shapefile para '{dep}'")
     
     shape_sector = gpd.read_file(shapefile_path, driver='ESRI Shapefile')
+    
     mapa = shape_sector[
         (shape_sector['NOMBDEP'] == dep) &
         (shape_sector['NOMBPROV'] == prov) &
