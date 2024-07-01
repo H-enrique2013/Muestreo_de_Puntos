@@ -5,4 +5,4 @@ fiona
 shapely
 Flask==3.0.3
 gunicorn==20.1.0
-gdal==2.4.0
+gdal==3.3.3
