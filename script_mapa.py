@@ -1,7 +1,6 @@
 import geopandas as gpd
 import folium
 from shapely.geometry import Point
-import random
 import os
 import datetime
 import glob
