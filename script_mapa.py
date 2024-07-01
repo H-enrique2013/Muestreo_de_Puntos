@@ -5,26 +5,17 @@ import os
 import datetime
 import glob
 
-'''
-dir_shape={"AYACUCHO":os.path.join('Shape','Ayacucho','05_AYACUCHO_SectoresEstadisticos.shp'),
-           "APURIMAC":os.path.join('Shape','Apurimac','03_APURIMAC_SectoresEstadisticos.shp'),
-           "HUANCAVELICA":os.path.join('Shape','Huancavelica','09_HUANCAVELICA_SectoresEstadisticos.shp'),
-           "MADRE DE DIOS":os.path.join('Shape','Madre de Dios','17_MADRE_DE_DIOS_SectoresEstadisticos.shp'),
-           "MOQUEGUA":os.path.join('Shape','Moquegua','18_MOQUEGUA_SectoresEstadisticos.shp'),
-           "PUNO":os.path.join('Shape','Puno','21_PUNO_SectoresEstadisticos.shp'),
-           "TACNA":os.path.join('Shape','Tacna','23_TACNA_SectoresEstadisticos.shp'),
-           "TUMBES":os.path.join('Shape','Tumbes','24_TUMBES_SectoresEstadisticos.shp')
-           }
-'''
-
-def GeneradorHmtl_mapa(dep,prov,distr,dicPuntos):
-    shapefile_dir=f'Shape/{dep.capitalize()}'
-    shapefile_path = glob.glob(os.path.join(shapefile_dir, '*.shp'))[0]
-
-    if not shapefile_path:
-        raise ValueError(f"No se encontró el archivo de shapefile para '{dep}'")
+def GeneradorHmtl_mapa(dep, prov, distr, dicPuntos):
+    shapefile_dir = f'Shape/{dep.capitalize()}'
+    shapefile_paths = glob.glob(os.path.join(shapefile_dir, '*.shp'))
     
-    shape_sector = gpd.read_file(shapefile_path, driver='ESRI Shapefile')
+    if not shapefile_paths:
+        raise ValueError(f"No se encontraron archivos de shapefile para '{dep}' en '{shapefile_dir}'")
+    
+    # Seleccionar el primer archivo .shp encontrado
+    shapefile_path = shapefile_paths[0]
+    
+    shape_sector = gpd.read_file(shapefile_path)
     
     mapa = shape_sector[
         (shape_sector['NOMBDEP'] == dep) &
@@ -34,7 +25,7 @@ def GeneradorHmtl_mapa(dep,prov,distr,dicPuntos):
 
     # Convertir los puntos en un GeoDataFrame
     puntos = [Point(coords) for coords in dicPuntos.values()]
-    gdf_puntos = gpd.GeoDataFrame(dicPuntos.keys(), geometry=puntos, crs="EPSG:4326")
+    gdf_puntos = gpd.GeoDataFrame(list(dicPuntos.keys()), geometry=puntos, crs="EPSG:4326")
 
     # Crear un mapa centrado en la ubicación de los puntos
     map_center = [gdf_puntos.geometry.y.mean(), gdf_puntos.geometry.x.mean()]
@@ -54,6 +45,3 @@ def GeneradorHmtl_mapa(dep,prov,distr,dicPuntos):
     m.save(filepath)
 
     return filepath  # Devolver la ruta al archivo generado
-
-
-#GeneradorHmtl_mapa('AYACUCHO','HUANTA','IGUAIN',generar_puntos())
