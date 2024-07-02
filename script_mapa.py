@@ -39,7 +39,7 @@ def GeneradorHmtl_mapa(dep, prov, distr, dicPuntos):
 
     # Generar el nombre del archivo con la combinación de departamento, provincia, distrito y hora actual
     now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    url_mapa = f"{dep}_{prov}_{distr}_{str(now)}.html"
+    url_mapa = f"{dep}_{prov}_{distr}_{now}.html"
     filepath = os.path.join("static", url_mapa)  # Guardar en la carpeta 'static' de Flask
     m.save(filepath)
 
