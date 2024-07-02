@@ -31,7 +31,7 @@ def GeneradorHmtl_mapa(dep, prov, distr, dicPuntos):
 
     # Agregar el sector estadístico al mapa
     #folium.GeoJson(mapa).add_to(m)
-    folium.GeoJson(mapa.__geo_interface__).add_to(m)
+    folium.GeoJson(mapa).add_to(m)
 
     # Agregar los puntos al mapa
     for punto, coord in dicPuntos.items():
@@ -44,3 +44,4 @@ def GeneradorHmtl_mapa(dep, prov, distr, dicPuntos):
     m.save(filepath)
 
     return filepath  # Devolver la ruta al archivo generado
+
