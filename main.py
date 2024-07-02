@@ -9,7 +9,7 @@ app = Flask(__name__, template_folder='templates')
 
 
 def delete_file(filepath):
-    time.sleep(60)  # Esperar 5 segundos
+    time.sleep(5)  # Esperar 5 segundos
     if os.path.exists(filepath):
         try:
             os.remove(filepath)
