@@ -10,7 +10,7 @@ def GeneradorHmtl_mapa(dep, prov, distr, dicPuntos):
     shapefile_dir = f'shapefiles/{nom_dep}.shp'
     shapefile_path = os.path.join(shapefile_dir)
     
-    if not shapefile_path:
+    if not os.path.exists(shapefile_path):
         raise ValueError(f"No se encontraron archivos de shapefile para '{dep}' en '{shapefile_dir}'")
     
     shape_sector = gpd.read_file(shapefile_path,driver='ESRI Shapefile')
