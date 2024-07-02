@@ -3,6 +3,7 @@ import script_mapa
 import os
 import time
 import threading
+import traceback 
 
 app = Flask(__name__, template_folder='templates')
 
@@ -41,8 +42,11 @@ def generate_map():
             threading.Thread(target=delete_file, args=(filepath,)).start()
             return response, 200
         except Exception as e:
-            print(f"Error: {str(e)}")  # Agregar esto para imprimir el error en la consola
-            return jsonify({"error": f"Error al generar el mapa: {str(e)}"}), 500
+            #print(f"Error: {str(e)}")  # Agregar esto para imprimir el error en la consola
+            traceback.print_exc()
+            # Devolver un mensaje de error genérico
+            return jsonify({"error": "Error interno del servidor"}), 500
+            #return jsonify({"error": f"Error al generar el mapa: {str(e)}"}), 500
 
     else:
         return jsonify({"error": "Método no permitido"}), 405
