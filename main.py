@@ -17,7 +17,7 @@ def delete_file(filepath):
 @app.route('/')
 def index():
     return render_template('index.html')
-
+#Método POST
 @app.route('/generate-map', methods=['POST'])
 def generate_map():
     if request.method == 'POST':
