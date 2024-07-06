@@ -41,11 +41,11 @@ def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     map_center = [gdf_puntos.geometry.y.mean(), gdf_puntos.geometry.x.mean()]
     m = folium.Map(location=map_center, zoom_start=14)
 
-    # Añadir control de capas
+    # Añadir control de capas con atribución
     base_layers = {
-        "Mapa Estándar": folium.TileLayer("OpenStreetMap"),
-        "Vista Satelital": folium.TileLayer("Stamen Terrain"),
-        "Híbrido": folium.TileLayer("Stamen Toner")
+        "Mapa Estándar": folium.TileLayer(tiles="OpenStreetMap", attr='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'),
+        "Vista Satelital": folium.TileLayer(tiles="Stamen Terrain", attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.'),
+        "Híbrido": folium.TileLayer(tiles="Stamen Toner", attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.')
     }
 
     for layer in base_layers.values():
