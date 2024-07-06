@@ -42,28 +42,39 @@ def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     m = folium.Map(location=map_center, zoom_start=14)
 
     # Añadir control de capas con atribución
-    base_layers = {
-        "Mapa Estándar": folium.TileLayer(tiles="OpenStreetMap", attr='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'),
-        "Vista Satelital": folium.TileLayer(tiles="Stamen Terrain", attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.'),
-        "Híbrido": folium.TileLayer(tiles="Stamen Toner", attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.')
-    }
+    folium.TileLayer(
+        tiles='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        attr='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        name='Mapa Estándar'
+    ).add_to(m)
+    
+    folium.TileLayer(
+        tiles='https://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.jpg',
+        attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.',
+        name='Vista Satelital'
+    ).add_to(m)
+    
+    folium.TileLayer(
+        tiles='https://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png',
+        attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.',
+        name='Híbrido'
+    ).add_to(m)
 
-    for layer in base_layers.values():
-        layer.add_to(m)
-
-    folium.GeoJson(mapa).add_to(m)
+    folium.GeoJson(mapa, name='GeoJson').add_to(m)
 
     for punto, coord in dicPuntos.items():
         folium.Marker(location=[coord[1], coord[0]], popup=punto, icon=folium.Icon(color='orange')).add_to(m)
 
-    # Añadir leyenda
+   
+     # Añadir leyenda
     legend_html = '''
      <div style="position: fixed; 
-     bottom: 50px; left: 50px; width: 200px; height: 90px; 
+     bottom: 50px; left: 50px; width: 200px; height: 120px; 
      background-color: white; z-index:9999; font-size:14px;
      border:2px solid grey; padding: 10px;">
      <strong>Leyenda</strong><br>
      <i class="fa fa-map-marker fa-2x" style="color:orange"></i> Puntos<br>
+     <i class="fa fa-map fa-2x" style="color:blue"></i> GeoJson<br>
      </div>
      '''
     m.get_root().html.add_child(folium.Element(legend_html))
