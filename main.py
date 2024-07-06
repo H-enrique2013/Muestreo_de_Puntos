@@ -25,11 +25,12 @@ def generate_map():
         dep = data.get('Departamento')
         prov = data.get('Provincia')
         distr = data.get('Distrito')
+        sect = data.get('Sector')
         dicPuntos = data.get('DiccionarioPuntos')
 
         filepath = None
         try:
-            filepath = script_mapa.GeneradorHmtl_mapa(dep, prov, distr, dicPuntos)
+            filepath = script_mapa.GeneradorHmtl_mapa(dep, prov, distr,sect, dicPuntos)
             filename = os.path.basename(filepath)
             directory = os.path.dirname(filepath)
             response = send_from_directory(directory=directory, path=filename)

@@ -4,7 +4,7 @@ from shapely.geometry import Point
 import os
 import datetime
 
-def GeneradorHmtl_mapa(dep, prov, distr, dicPuntos):
+def GeneradorHmtl_mapa(dep, prov, distr,sect,dicPuntos):
     nom_dep = dep.replace(" ", "_")
     shapefile_dir = f'shapefiles/{nom_dep}.shp'
     shapefile_path = os.path.join(shapefile_dir)
@@ -26,7 +26,8 @@ def GeneradorHmtl_mapa(dep, prov, distr, dicPuntos):
     mapa = shape_sector[
         (shape_sector['NOMBDEP'] == dep) &
         (shape_sector['NOMBPROV'] == prov) &
-        (shape_sector['NOMBDIST'] == distr)
+        (shape_sector['NOMBDIST'] == distr) &
+        (shape_sector['NOM_SE'] == sect)
     ]
 
     # Asegurarse de que el filtro no devuelve un NoneType
