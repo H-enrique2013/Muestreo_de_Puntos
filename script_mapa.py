@@ -3,6 +3,7 @@ import folium
 from shapely.geometry import Point
 import os
 import datetime
+import simplekml
 
 def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     nom_dep = dep.replace(" ", "_")
@@ -84,4 +85,22 @@ def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     filepath = os.path.join("static", url_mapa)
     m.save(filepath)
 
-    return filepath
+    # Crear archivo KML
+    kml = simplekml.Kml()
+
+    # Añadir puntos al KML
+    for punto, coord in dicPuntos.items():
+        kml.newpoint(name=punto, coords=[(coord[0], coord[1])])
+
+    # Añadir geometrías del shapefile al KML
+    for _, row in mapa.iterrows():
+        if row.geometry.geom_type == 'Polygon':
+            pol = kml.newpolygon(name=row['NOM_SE'], outerboundaryis=list(row.geometry.exterior.coords))
+        elif row.geometry.geom_type == 'MultiPolygon':
+            for poly in row.geometry:
+                pol = kml.newpolygon(name=row['NOM_SE'], outerboundaryis=list(poly.exterior.coords))
+
+    kml_filepath = os.path.join("static", f"{dep}_{prov}_{distr}_{now}.kml")
+    kml.save(kml_filepath)
+
+    return filepath,kml_filepath

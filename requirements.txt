@@ -2,4 +2,5 @@ geopandas
 folium
 shapely
 flask
+simplekml
 gunicorn==20.1.0

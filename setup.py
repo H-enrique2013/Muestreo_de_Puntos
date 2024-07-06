@@ -9,5 +9,6 @@ setup(
         'folium',
         'shapely',
         'flask',
+        'simplekml',
     ],
 )
