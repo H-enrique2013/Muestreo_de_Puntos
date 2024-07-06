@@ -1,10 +1,11 @@
 import geopandas as gpd
 import folium
+from folium import plugins
 from shapely.geometry import Point
 import os
 import datetime
 
-def GeneradorHmtl_mapa(dep, prov, distr,sect,dicPuntos):
+def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     nom_dep = dep.replace(" ", "_")
     shapefile_dir = f'shapefiles/{nom_dep}.shp'
     shapefile_path = os.path.join(shapefile_dir)
@@ -40,10 +41,34 @@ def GeneradorHmtl_mapa(dep, prov, distr,sect,dicPuntos):
     map_center = [gdf_puntos.geometry.y.mean(), gdf_puntos.geometry.x.mean()]
     m = folium.Map(location=map_center, zoom_start=14)
 
+    # Añadir control de capas
+    base_layers = {
+        "Mapa Estándar": folium.TileLayer("OpenStreetMap"),
+        "Vista Satelital": folium.TileLayer("Stamen Terrain"),
+        "Híbrido": folium.TileLayer("Stamen Toner")
+    }
+
+    for layer in base_layers.values():
+        layer.add_to(m)
+
     folium.GeoJson(mapa).add_to(m)
 
     for punto, coord in dicPuntos.items():
         folium.Marker(location=[coord[1], coord[0]], popup=punto, icon=folium.Icon(color='orange')).add_to(m)
+
+    # Añadir leyenda
+    legend_html = '''
+     <div style="position: fixed; 
+     bottom: 50px; left: 50px; width: 200px; height: 90px; 
+     background-color: white; z-index:9999; font-size:14px;
+     border:2px solid grey; padding: 10px;">
+     <strong>Leyenda</strong><br>
+     <i class="fa fa-map-marker fa-2x" style="color:orange"></i> Puntos<br>
+     </div>
+     '''
+    m.get_root().html.add_child(folium.Element(legend_html))
+
+    folium.LayerControl().add_to(m)
 
     now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     url_mapa = f"{dep}_{prov}_{distr}_{now}.html"
