@@ -40,7 +40,7 @@ def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     map_center = [gdf_puntos.geometry.y.mean(), gdf_puntos.geometry.x.mean()]
     m = folium.Map(location=map_center, zoom_start=14)
 
-    # Añadir control de capas con atribución
+    # Añadir capas de mapas
     folium.TileLayer(
         tiles='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         attr='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
