@@ -1,6 +1,5 @@
 import geopandas as gpd
 import folium
-from folium import plugins
 from shapely.geometry import Point
 import os
 import datetime
@@ -49,13 +48,13 @@ def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     ).add_to(m)
     
     folium.TileLayer(
-        tiles='https://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.jpg',
+        tiles='https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg',
         attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.',
         name='Vista Satelital'
     ).add_to(m)
     
     folium.TileLayer(
-        tiles='https://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png',
+        tiles='https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
         attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.',
         name='Híbrido'
     ).add_to(m)
@@ -65,8 +64,7 @@ def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     for punto, coord in dicPuntos.items():
         folium.Marker(location=[coord[1], coord[0]], popup=punto, icon=folium.Icon(color='orange')).add_to(m)
 
-   
-     # Añadir leyenda
+    # Añadir leyenda
     legend_html = '''
      <div style="position: fixed; 
      bottom: 50px; left: 50px; width: 200px; height: 120px; 
@@ -74,7 +72,7 @@ def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
      border:2px solid grey; padding: 10px;">
      <strong>Leyenda</strong><br>
      <i class="fa fa-map-marker fa-2x" style="color:orange"></i> Puntos<br>
-     <i class="fa fa-map fa-2x" style="color:blue"></i> GeoJson<br>
+     <i class="fa fa-map fa-2x" style="color:blue"></i> Sector<br>
      </div>
      '''
     m.get_root().html.add_child(folium.Element(legend_html))
