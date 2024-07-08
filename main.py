@@ -27,7 +27,7 @@ def generatemap_html():
     sect = data.get('Sector')
     dicPuntos = data.get('DiccionarioPuntos')
 
-    filepath = None
+    html_filepath = None
     #kml_filepath=None
     try:
         (html_filepath,kml_filepath)= script_mapa.GeneradorHmtl_mapa(dep, prov, distr,sect, dicPuntos)
