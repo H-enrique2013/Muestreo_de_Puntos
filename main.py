@@ -7,7 +7,7 @@ import threading
 app = Flask(__name__, template_folder='templates')
 
 def delete_file(filepath):
-    time.sleep(60)
+    time.sleep(5)
     if os.path.exists(filepath):
         try:
             os.remove(filepath)
