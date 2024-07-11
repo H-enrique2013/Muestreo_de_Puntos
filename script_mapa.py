@@ -41,42 +41,90 @@ def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     map_center = [gdf_puntos.geometry.y.mean(), gdf_puntos.geometry.x.mean()]
     m = folium.Map(location=map_center, zoom_start=14)
 
-    # Añadir capas de mapas
+    mapbox_api_key = 'pk.eyJ1IjoiZW5yaXF1ZXNhbmRvdmFsIiwiYSI6ImNseWhxZmU2NTA3NjkybW9mbWxzZXpmdGQifQ.c1uvRvMYZyEaLaCqYioUmw'
+    # Añadir capas de mapas utilizando Mapbox
     folium.TileLayer(
-        tiles='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        attr='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+        tiles=f'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/256/{{z}}/{{x}}/{{y}}@2x?access_token={mapbox_api_key}',
+        attr='Map data © <a href="https://www.mapbox.com/">Mapbox</a>',
         name='Mapa Estándar'
     ).add_to(m)
     
     folium.TileLayer(
-        tiles='https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg',
-        attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.',
+        tiles=f'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/256/{{z}}/{{x}}/{{y}}@2x?access_token={mapbox_api_key}',
+        attr='Map data © <a href="https://www.mapbox.com/">Mapbox</a>',
         name='Vista Satelital'
     ).add_to(m)
     
     folium.TileLayer(
-        tiles='https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png',
-        attr='Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under ODbL.',
+        tiles=f'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/256/{{z}}/{{x}}/{{y}}@2x?access_token={mapbox_api_key}',
+        attr='Map data © <a href="https://www.mapbox.com/">Mapbox</a>',
         name='Híbrido'
     ).add_to(m)
 
-    folium.GeoJson(mapa, name='GeoJson').add_to(m)
+    folium.GeoJson(
+        mapa,name='Sector Estadistico',
+        style_function=lambda feature: {
+            'fillColor': '#ADD8E6',  # Azul claro
+            'weight': 2,             # Grosor del borde
+            'fillOpacity': 0.6       # Opacidad del relleno
+        }
+    ).add_to(m)
 
     for punto, coord in dicPuntos.items():
-        folium.Marker(location=[coord[1], coord[0]], popup=punto, icon=folium.Icon(color='orange')).add_to(m)
+        folium.Marker(location=[coord[1], coord[0]], popup=punto, icon=folium.Icon(color='red')).add_to(m)
 
     # Añadir leyenda
     legend_html = '''
-     <div style="position: fixed; 
-     bottom: 50px; left: 50px; width: 200px; height: 120px; 
-     background-color: white; z-index:9999; font-size:14px;
-     border:2px solid grey; padding: 10px;">
-     <strong>Leyenda</strong><br>
-     <i class="fa fa-map-marker fa-2x" style="color:orange"></i> Puntos<br>
-     <i class="fa fa-map fa-2x" style="color:blue"></i> Sector<br>
-     </div>
+    <div style="position: fixed; 
+    top: 468px; left: 7px; width: 300px; height: 100px; 
+    background-color: white; z-index:9999; font-size:11px;
+    border:2px solid grey; padding: 10px;">
+    <div style="background-color: red; font-size:14px;color:white;padding: 5px;">
+    <strong>LEYENDA</strong>
+    </div>
+    <i class="fa fa-map-marker fa-2x" style="color:red"></i> Puntos<br>
+    <svg width="24" height="24"><rect width="24" height="24" style="fill:#ADD8E6;stroke-width:1;stroke:rgb(0,0,0)" /></svg> Sector Estadistico<br>
+    </div>
      '''
     m.get_root().html.add_child(folium.Element(legend_html))
+
+    # Añadir cuadro "Datos del sector Estadístico"
+    datos_sector = f'''
+    <div style="position: fixed; 
+    top: 80px; left: 7px; width: 300px; height: 120px; 
+    background-color: white; z-index:9999; font-size:11px;
+    border:2px solid grey; padding: 10px;">
+    <div style="background-color: red; font-size:14px;color:white;padding: 5px;">
+    <strong>DATOS DEL SECTOR ESTADÍSTICO</strong>
+    </div>
+    Departamento: {dep}<br>
+    Provincia: {prov}<br>
+    Distrito: {distr}<br>
+    Sector Estadístico: {sect}<br>
+    </div>
+    '''
+    m.get_root().html.add_child(folium.Element(datos_sector))
+
+    # Añadir cuadro "Cuadro de Coordenadas"
+    coordenadas = '''
+    <div style="position: fixed; top: 200px; left: 7px; width: 300px; height: 268px; 
+    background-color: white; z-index: 9999; font-size: 11px; border: 2px solid grey; padding: 10px;">
+    <div style="background-color: red; font-size: 14px; color: white; padding: 5px;">
+    <strong>CUADRO DE COORDENADAS</strong>
+    </div>
+    <table style="width: 100%;">
+    <tr>
+    <th style="text-align: center; padding-right: 10px;">Puntos</th>
+    <th style="text-align: center; padding-right: 10px;">Longitud</th>
+    <th style="text-align: center;">Latitud</th>
+    </tr>
+    '''
+    # Iterar sobre los puntos y coordenadas
+    for punto, coord in dicPuntos.items():
+        coordenadas += f'<tr><td>{punto}</td><td>{coord[0]}</td><td>{coord[1]}</td></tr>'
+    coordenadas += '</table></div>'
+    # Añadir el cuadro de coordenadas al mapa folium
+    m.get_root().html.add_child(folium.Element(coordenadas))
 
     folium.LayerControl().add_to(m)
 
