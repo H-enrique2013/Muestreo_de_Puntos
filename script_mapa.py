@@ -5,6 +5,36 @@ import os
 import datetime
 import simplekml
 
+#Transformar coordenadas en formato decimal a grados,minutos y segundos
+def decimal_a_gms(decimal):
+    grados = int(decimal)
+    minutos_dec = abs((decimal - grados) * 60)
+    minutos = int(minutos_dec)
+    segundos = (minutos_dec - minutos) * 60
+    segundos=round(segundos,2)
+    
+    # Añadir cero a la izquierda en minutos si es necesario
+    if minutos < 10:
+        minutos_str = f"0{minutos}"
+    else:
+        minutos_str = str(minutos)
+
+    # Añadir cero a la izquierda en segundos si es necesario
+    if segundos < 10:
+        seg="{:.2f}".format(segundos)
+        segundos_str = f"0{seg}"
+    else:
+        segundos_str = "{:.2f}".format(segundos)
+    
+    return grados, minutos_str, segundos_str
+
+# Función para determinar la dirección
+def determinar_direccion(grados, latitud=True):
+    if latitud:
+        return 'N' if grados >= 0 else 'S'
+    else:
+        return 'E' if grados >= 0 else 'W'
+
 def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     nom_dep = dep.replace(" ", "_")
     shapefile_dir = f'shapefiles/{nom_dep}.shp'
@@ -121,7 +151,21 @@ def GeneradorHmtl_mapa(dep, prov, distr, sect, dicPuntos):
     '''
     # Iterar sobre los puntos y coordenadas
     for punto, coord in dicPuntos.items():
-        coordenadas += f'<tr><td>{punto}</td><td>{coord[0]}</td><td>{coord[1]}</td></tr>'
+        # Conversión de longitud
+        grados_lon, minutos_lon, segundos_lon = decimal_a_gms(coord[0])
+        # Conversión de latitud
+        grados_lat, minutos_lat, segundos_lat = decimal_a_gms(coord[1])
+        # Direcciones
+        direccion_lon = determinar_direccion(grados_lon, latitud=False)
+        direccion_lat = determinar_direccion(grados_lat, latitud=True)
+
+        # Ajustar grados para dirección negativa
+        grados_lon = abs(grados_lon)
+        grados_lat = abs(grados_lat)
+
+        longitud=f"{grados_lon}°{minutos_lon}'{segundos_lon}\" {direccion_lon}"
+        latitud=f"{grados_lat}°{minutos_lat}'{segundos_lat}\" {direccion_lat}"
+        coordenadas += f'<tr><td>{punto}</td><td>{longitud}</td><td>{latitud}</td></tr>'
     coordenadas += '</table></div>'
     # Añadir el cuadro de coordenadas al mapa folium
     m.get_root().html.add_child(folium.Element(coordenadas))
