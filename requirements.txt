@@ -1,7 +1,6 @@
-uvicorn
 geopandas
 folium
-fiona
 shapely
-Flask==3.0.3
+flask
+simplekml
 gunicorn==20.1.0

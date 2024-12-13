@@ -8,5 +8,7 @@ setup(
         'geopandas',
         'folium',
         'shapely',
+        'flask',
+        'simplekml',
     ],
 )
